@@ -123,7 +123,7 @@ def submissionSpecifiedSearch(subredditName, titleKeywords, textKeywords, minSco
                 if selected.is_self:
                     params = {"title": selected.title, "selftext": selected.selftext}
                     # print "Submission score: " + str(selected.score)
-                    if any(keyword in params["selftext"].encode('utf-8') for keyword in textKeywords):
+                    if (not textKeywords) or any(keyword in params["selftext"].encode('utf-8') for keyword in textKeywords):
                         # else:
                         #     params = {"title": selected.title, "url": selected.url}
                         try:
@@ -137,7 +137,7 @@ def submissionSpecifiedSearch(subredditName, titleKeywords, textKeywords, minSco
                 else:
                     params = {"title": selected.title, "url": selected.url}
                     # print "Submission score: " + str(selected.score)
-                    if any(keyword in params["title"].encode('utf-8') for keyword in titleKeywords):
+                    if (not titleKeywords) or any(keyword in params["title"].encode('utf-8') for keyword in titleKeywords):
                         # else:
                         #     params = {"title": selected.title, "url": selected.url}
                         try:
@@ -208,8 +208,8 @@ def replySpecified(daysAgoFrom, daysAgoTo, subredditName, submissionTitleKeyword
     print "Searching for a submission to reply to a comment, please wait..."
 
     unixNow = calendar.timegm(time.gmtime())
-    unixFrom = unixNow - daysAgoFrom + random.randint(0, 100)
-    unixTo = unixNow - daysAgoTo - random.randint(0, 100)
+    unixFrom = unixNow - daysAgoFrom - random.randint(0, 10 * 86400)
+    unixTo = unixNow - daysAgoTo + random.randint(0, 10 * 86400)
 
     url = "https://api.pushshift.io/reddit/submission/search/?subreddit=" + str(subredditName) + "&is_self=" + random.choice(boolean_values) + \
           "&is_video=" + random.choice(boolean_values) + "&score=>" + str(minSubmissionScore) + "&size=500&after=" + str(unixFrom) + \
@@ -254,26 +254,27 @@ def replySpecified(daysAgoFrom, daysAgoTo, subredditName, submissionTitleKeyword
                 if selected.is_self:
                     params = {"title": selected.title, "selftext": selected.selftext}
                     # print "Got a submission"
-                    if any(keyword in params["selftext"].encode('utf-8') for keyword in submissionTextKeywords):
+                    if (not submissionTextKeywords) or any(keyword in params["selftext"].encode('utf-8') for keyword in submissionTextKeywords):
                         if postReply(selected, minCommentScore, commentKeywords, maxReplyLength):
                             posted = True
                 else:
                     params = {"title": selected.title, "url": selected.url}
                     # print "Got a submission"
-                    if any(keyword in params["title"].encode('utf-8') for keyword in submissionTitleKeywords):
+                    if (not submissionTitleKeywords) or any(keyword in params["title"].encode('utf-8') for keyword in submissionTitleKeywords):
                         if postReply(selected, minCommentScore, commentKeywords, maxReplyLength):
                             posted = True
         else:
+            print tries
             tries = 0
             unixNow = calendar.timegm(time.gmtime())
-            unixFrom = unixNow - daysAgoFrom + random.randint(0, 100)
-            unixTo = unixNow - daysAgoTo - random.randint(0, 100)
+            unixFrom = unixNow - daysAgoFrom - random.randint(0, 10 * 86400)
+            unixTo = unixNow - daysAgoTo + random.randint(0, 10 * 86400)
 
             url = "https://api.pushshift.io/reddit/submission/search/?subreddit=" + str(subredditName) + "&is_self=" + random.choice(boolean_values) + \
                   "&is_video=" + random.choice(boolean_values) + "&score=>" + str(minSubmissionScore) + "&size=500&after=" + str(unixFrom) + \
                   "&before=" + str(unixTo) + "&sort_type=" + random.choice(sort_types) + "&sort=" + random.choice(sort_order) + "&filter=id"
 
-            # print (url)
+            print (url)
 
             submissions = None
 
@@ -297,7 +298,7 @@ def postReply(selectedSubmission, minCommentScore, commentKeywords, maxReplyLeng
         bestComment = selectedSubmission.comments.list()[0]
         # print "comment score: " + str(bestComment.score)
         if bestComment.score >= minCommentScore:
-            if any(keyword in bestComment.body.encode('utf-8') for keyword in commentKeywords):
+            if (not commentKeywords) or any(keyword in bestComment.body.encode('utf-8') for keyword in commentKeywords):
                 try:
                     # Pass the users comment to chatbrain asking for a reply
                     response = bot.brain.reply(bestComment.body, 5000, maxReplyLength)
@@ -314,7 +315,7 @@ def postReply(selectedSubmission, minCommentScore, commentKeywords, maxReplyLeng
                         replyFailed = False
                         print "Reply posted"
                     except Exception as e:
-                        print "reply FAILED"
+                        print "reply FAILED with exception: " + str(e)
                 return True
     return False
 

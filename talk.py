@@ -6,18 +6,18 @@ import time
 if __name__ == '__main__':
 
     ####### PARAMETERS ######
-    maxReplyLength = 20
-    submissionTitleKeywords = ["I "]
-    submissionTextKeywords = [" am "]
-    commentKeywords = [""]
-    submissionMinScore = 4
-    commentMinScore = 5
+    maxReplyLength = 30
+    submissionTitleKeywords = []
+    submissionTextKeywords = []
+    commentKeywords = []
+    submissionMinScore = 0
+    commentMinScore = 2
     subredditNameRepost = "aliens"
-    subredditNameReply = "cars"
-    replySubmissionDaysAgoFrom = 200  # from 20 days ago
+    subredditNameReply = "literature"
+    replySubmissionDaysAgoFrom = 5  # from 5 days ago
     replySubmissionDaysAgoTo = 0  # ...to today (0 days from today and backwards)
     sleepTimeInMinutesForSubmissions = 15
-    sleepTimeInMinutesForReplies = 10
+    sleepTimeInMinutesForReplies = 11
     sleepTimeInMinutesForCommentDeletion = 1
     maxReplyLengthEnabled = True
     submissionPostEnabled = True

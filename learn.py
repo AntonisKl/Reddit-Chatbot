@@ -12,7 +12,7 @@ if __name__ == '__main__':
         # so that it doesn't stop because of errors
         try:
             # Get the hot submissions from a random subreddit
-            submissions = reddit.api.subreddit('random').hot()
+            submissions = reddit.api.subreddit('literature').hot()
 
             # Loop through each submission
             for submission in submissions:
@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
                 # Get a list of all the comments flattened
                 comments = submission.comments.list()
+                print "Comments: " + str(comments)
 
                 # Loop through each comment from the submission
                 for comment in comments:
