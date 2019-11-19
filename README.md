@@ -1,4 +1,4 @@
-# Reddit chatbot
+# Reddit Chatbot
 
 ## Clone the repo, and open the directory
 > git clone https://github.com/AntonisKl/Reddit-Chatbot.git
