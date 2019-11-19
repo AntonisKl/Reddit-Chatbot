@@ -14,6 +14,9 @@
 ## Install dependencies
 > pip install -r requirements.txt
 
+## Add your Reddit API credentials
+Modify "settings.py" file by adding your own Reddit API credentials
+
 ## Run learn.py to have the bot start learning from reddit
 > python learn.py
 
